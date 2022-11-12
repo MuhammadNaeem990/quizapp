@@ -20,44 +20,68 @@ class _MyAppState extends State<MyApp> {
   final _questions = const [
     {
       'questionText': 'Whats your Favourite Color?',
-      'answers': ['Black', 'Red', 'Green', 'White'],
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1}
+      ],
     },
     {
       'questionText': 'Whats your favourite animal?',
-      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
+      'answers': [
+        {'text': 'Rabbit', 'score': 10},
+        {'text': 'Snake', 'score': 5},
+        {'text': 'Elephant', 'score': 3},
+        {'text': 'Lion', 'score': 1},
+      ],
     },
     {
       'questionText': "Who is your Favourite Instructor?",
-      'answers': ['Max', 'Max', 'Max', 'Max'],
+      'answers': [
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+        {'text': 'Max', 'score': 1},
+      ],
     },
   ];
   int _questionIndex = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
-    setState(() {
-      _questionIndex = _questionIndex + 1;
+  void _resetQuiz() {
+    setState((){
+    _questionIndex = 0;
+    _totalScore = 0;
     });
-    print(_questionIndex);
-    if (_questionIndex < _questions.length) {
-      print('We have more questions');
-    } else {
-      print('No More Questions!');
-    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: Text('My First App'),
-      ),
-      body: _questionIndex < _questions.length
-          ? Quiz(
-              answerQuestion: _answerQuestion,
-              questionIndex: _questionIndex,
-              questions: _questions)
-          : Result(),
-    ));
+void _answerQuestion(int score) {
+  _totalScore += score;
+
+  setState(() {
+    _questionIndex = _questionIndex + 1;
+  });
+  print(_questionIndex);
+  if (_questionIndex < _questions.length) {
+    print('We have more questions');
+  } else {
+    print('No More Questions!');
   }
 }
+
+@override
+Widget build(BuildContext context) {
+  return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My First App'),
+        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+            answerQuestion: _answerQuestion,
+            questionIndex: _questionIndex,
+            questions: _questions)
+            : Result(_totalScore,_resetQuiz),
+      ));
+}}
